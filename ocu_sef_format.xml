@@ -1,0 +1,40 @@
+<modification>
+    <id>OpenCart SEF Format by OpenCart Ukrainian Team</id>
+    <version>1.5.1</version>
+    <vqmver>1.2/18.08.2011</vqmver>
+    <author>Eugene Kuligin (a.k.a. Shaman)</author>
+    <file name="admin/controller/catalog/product.php">
+        <operation>
+            <search position="before">
+                <![CDATA[public function index() {]]>
+            </search>
+            <add>
+                <![CDATA[
+                    private function sefFormat($string, $separator = '-') {
+                        return $this->data['keyword'] = trim(preg_replace(array('/\s|\(|\)|\[|\]/', '/[' . $separator . ']+/'), $separator, mb_strtolower($string, 'UTF-8')), $separator);
+                    }
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace">
+                <![CDATA[$this->data['keyword'] = $this->request->post['keyword'];]]>
+            </search>
+            <add>
+                <![CDATA[
+                    $this->data['keyword'] = $this->sefFormat($this->request->post['keyword']);
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search position="replace">
+                <![CDATA[$this->data['keyword'] = $product_info['keyword'];]]>
+            </search>
+            <add>
+                <![CDATA[
+                    $this->data['keyword'] = $this->sefFormat($product_info['keyword']);
+                ]]>
+            </add>
+        </operation>
+    </file>
+</modification>
